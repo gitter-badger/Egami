@@ -1,22 +1,22 @@
 /****************************************************************************************************************
-* Developer: Minhas Kamal(BSSE-0509, IIT, DU)																	*
+* Developer: Minhas Kamal(minhaskamal024@gmail.com)																*
 * Date: 28-Jan-2015																								*
 * Modification Date: 01-Jan-2016																				*
 ****************************************************************************************************************/
 
-package com.minhaskamal.egami.histogram;
+package com.minhaskamal.egami.processes;
 
 import java.io.IOException;
 
 import com.minhaskamal.egami.matrix.Matrix;
-import com.minhaskamal.egami.matrix.MatrixUtilities;
+import com.minhaskamal.egami.matrix.MatrixUtilitiesPrimary;
 
 public class RGBHistogram {
 	private final int colorValues = 256;
 	
-	public void showRGBHistogram(Matrix matrix, int barWidth, int height){
+	public void showRGBHistogram(Matrix matrix, int barWidth, int height, String outputFilePath){
 		if(matrix.getType()!=Matrix.RED_GREEN_BLUE){
-			MatrixUtilities.convertTo(matrix, Matrix.RED_GREEN_BLUE);
+			matrix = MatrixUtilitiesPrimary.convertTo(matrix, Matrix.RED_GREEN_BLUE);
 		}
 		
 		int verticalBuffer = barWidth;
@@ -54,7 +54,7 @@ public class RGBHistogram {
 		}
 		
 		try {
-			matrixHistogram.write("C:\\Users\\admin\\Desktop\\hist.png");
+			matrixHistogram.write(outputFilePath);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -90,10 +90,13 @@ public class RGBHistogram {
 		return highestFreq;
 	}
 	
+	///test only
 	public static void main(String[] args) {
 		try {
-			Matrix matrix = new Matrix("C:\\Users\\admin\\Desktop\\a.jpg");
-			new RGBHistogram().showRGBHistogram(matrix, 3, 350);
+			Matrix matrix = new Matrix("C:\\Users\\admin\\Desktop\\2.png", Matrix.BLACK_WHITE);
+			new RGBHistogram().showRGBHistogram(matrix, 3, 350, "C:\\Users\\admin\\Desktop\\hist7.png");
+			
+			System.out.println("O S!!");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

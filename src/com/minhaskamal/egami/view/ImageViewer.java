@@ -1,5 +1,5 @@
 /****************************************************************************************************************
-* Developer: Minhas Kamal(BSSE-0509, IIT, DU)																	*
+* Developer: Minhas Kamal(minhaskamal024@gmail.com)																*
 * Date: 28-Aug-2015																								*
 ****************************************************************************************************************/
 
@@ -10,6 +10,7 @@ import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
@@ -42,9 +43,9 @@ public class ImageViewer{
 
 	/***##Constructor##***/
 	public ImageViewer(){
-		imageFilePath="";
-		imageWidth=0;
-		imageHeight=0;
+		this.imageFilePath="";
+		this.imageWidth=0;
+		this.imageHeight=0;
 		
 		initialComponent();
 	}
@@ -55,32 +56,32 @@ public class ImageViewer{
 	 */
 	private void initialComponent() {
 		// GUI Initialization
-		gui = new ImageViewerGui();
-		gui.setVisible(true);
+		this.gui = new ImageViewerGui();
+		this.gui.setVisible(true);
 		
 		//**
 		// Assignation 																			#*******A*******#
 		//**
-		jLabel = gui.jLabel;
-		jButtonLoadImage = gui.jButtonLoadImage;
-		jButtonsZoom = gui.jButtonsZoom;
+		this.jLabel = this.gui.jLabel;
+		this.jButtonLoadImage = this.gui.jButtonLoadImage;
+		this.jButtonsZoom = this.gui.jButtonsZoom;
 		// End of Assignation																	#_______A_______#
 
 		//**
 		// Adding Action Events & Other Attributes												#*******AA*******#
 		//**
-		jButtonLoadImage.addActionListener(new ActionListener() {
+		this.jButtonLoadImage.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				jButtonLoadImagePerformed(evt);
 			}
 		});
 		
-		jButtonsZoom[0].addActionListener(new ActionListener() {
+		this.jButtonsZoom[0].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				jButtonsZoomActionPerformed(evt);
 			}
 		});
-		jButtonsZoom[1].addActionListener(new ActionListener() {
+		this.jButtonsZoom[1].addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent evt) {
 				jButtonsZoomActionPerformed(evt);
 			}
@@ -102,7 +103,7 @@ public class ImageViewer{
 	}
 	
 	private void jButtonsZoomActionPerformed(ActionEvent evt){
-		if(evt.getSource() == jButtonsZoom[0]){
+		if(evt.getSource() == this.jButtonsZoom[0]){
 			resizeImage(1.1);
 		}else{
 			resizeImage(.9);
@@ -117,62 +118,82 @@ public class ImageViewer{
 	
 	public void loadImage(String imageFilePath){
 		try {
-			ImageIcon image = new ImageIcon(ImageIO.read(new File(imageFilePath)));
+			BufferedImage bufferedImage = ImageIO.read(new File(imageFilePath));
 			this.imageFilePath = imageFilePath;
-			this.imageWidth=image.getIconWidth();
-			this.imageHeight=image.getIconHeight();
-			//Thread.sleep(1000);///don't remember the reason
 			
-			if(gui.getWidth()-40 < imageWidth){
-				int width = gui.getWidth()-40;
-				imageHeight = imageHeight * ((double)width/imageWidth);
-				this.imageWidth=width;
-				
-				jLabel.setIcon(new ImageIcon((image.getImage()).
-					getScaledInstance((int)imageWidth, (int)imageHeight, Image.SCALE_SMOOTH)));
-			}else{
-				jLabel.setIcon(new ImageIcon( image.getImage() ));
-			}
-			
+			loadImage(bufferedImage);
 		} catch (Exception e) {
 			e.printStackTrace();
 			//new Message("Error opening image.", 420);
 		}
 	}
 	
+	public void loadImage(BufferedImage bufferedImage){
+		ImageIcon image = new ImageIcon(bufferedImage);
+		this.imageWidth=image.getIconWidth();
+		this.imageHeight=image.getIconHeight();
+		
+		this.jLabel.setToolTipText("width: " + this.imageWidth + "px, height: " + this.imageHeight + "px");
+		
+		if(gui.getWidth()-40 < this.imageWidth){
+			int width = gui.getWidth()-40;
+			this.imageHeight = this.imageHeight * ((double)width/this.imageWidth);
+			this.imageWidth=width;
+			
+			this.jLabel.setIcon(new ImageIcon((image.getImage()).
+				getScaledInstance((int)this.imageWidth, (int)this.imageHeight, Image.SCALE_SMOOTH)));
+		}else{
+			this.jLabel.setIcon(new ImageIcon( image.getImage() ));
+		}
+	}
+	
 	private void resizeImage(double multiplier){
 		
-		double newImageWidth = imageWidth*multiplier;
-		double newImageHeight = imageHeight*multiplier;
+		double newImageWidth = this.imageWidth*multiplier;
+		double newImageHeight = this.imageHeight*multiplier;
 		
 		if(newImageWidth<2 || newImageHeight<2 || newImageWidth>10000 || newImageHeight>10000 ){
 			return;
 		}
 		
-		if(jLabel.getIcon()!=null){
-			imageWidth = newImageWidth;
-			imageHeight = newImageHeight;
+		if(this.jLabel.getIcon()!=null){
+			this.imageWidth = newImageWidth;
+			this.imageHeight = newImageHeight;
 
 			ImageIcon imageIcon;
 			try{
-				imageIcon = new ImageIcon(ImageIO.read( new File(imageFilePath) ));
+				imageIcon = new ImageIcon(ImageIO.read( new File(this.imageFilePath) ));
 			}catch (IOException e) {
-				imageIcon = (ImageIcon) jLabel.getIcon();
+				imageIcon = (ImageIcon) this.jLabel.getIcon();
 			}
 			
-			jLabel.setIcon(new ImageIcon((imageIcon.getImage()).
-					getScaledInstance((int)imageWidth, (int)imageHeight, Image.SCALE_SMOOTH)));
+			this.jLabel.setIcon(new ImageIcon((imageIcon.getImage()).
+					getScaledInstance((int)this.imageWidth, (int)this.imageHeight, Image.SCALE_SMOOTH)));
 		}
 		
 	}
 	
 	public void attachTo(JComponent jComponent) {
-		jComponent.add(gui);
+		jComponent.add(this.gui);
 		jComponent.revalidate();
 	}
 	
+	////////////////////////////////////////////////////////////////////////////////////////////
 	
 	public static void viewImage(String imagePath){
+		ImageViewer imageViewer = create();
+		
+		if(imagePath.contains(".")){
+			imageViewer.loadImage(imagePath);
+		}
+	}
+	
+	public static void viewImage(BufferedImage bufferedImage){
+		ImageViewer imageViewer = create();
+		imageViewer.loadImage(bufferedImage);
+	}
+	
+	public static ImageViewer create(){
 		JFrame jFrame = new JFrame("Image Viewer");
 		jFrame.setBounds(30, 30, 400, 400);
 		
@@ -188,9 +209,7 @@ public class ImageViewer{
 		jFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 		jFrame.setVisible(true);
 		
-		if(imagePath.contains(".")){
-			imageViewer.loadImage(imagePath);
-		}
+		return imageViewer;
 	}
 	// End of Auxiliary Methods 																#_______AM_______#
 	
@@ -200,7 +219,7 @@ public class ImageViewer{
 	
 	// End of Overridden Methods 																#_______OM_______#
 	
-	
+	///test only
 	/********* Main Method *********/
 	public static void main(String args[]) {
 		/*// Set the NIMBUS look and feel //*/
@@ -210,7 +229,8 @@ public class ImageViewer{
 			// do nothing if operation is unsuccessful
 		}
 
-		viewImage("");
+//		ImageViewer.create();
+		ImageViewer.viewImage("src/demo/res/imgs/real.png");
 	}
 }
 

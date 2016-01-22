@@ -1,7 +1,8 @@
 /****************************************************************************************************************
-* Developer: Minhas Kamal(BSSE-0509, IIT, DU)																	*
+* Developer: Minhas Kamal(minhaskamal024@gmail.com)																*
 * Date: 10-Mar-2015																								*
 * Modification Date: 30-Dec-2015																				*
+* Modification Date: 22-Jan-2016																				*
 ****************************************************************************************************************/
 
 package com.minhaskamal.egami.matrix;
@@ -19,6 +20,9 @@ public class Matrix {
 			RED_GREEN_BLUE = 3,
 			RED_GREEN_BLUE_ALPHA = 4;
 	
+	/**
+	 * image container
+	 */
 	int[][][] pixels;
 	
 	
@@ -26,6 +30,7 @@ public class Matrix {
 	
 	
 	/**
+	 * When invalid info is provided Matrix is created with minimal size.
 	 * @param row height of the image
 	 * @param col width of the image
 	 * @param type <code>BLACK_WHITE</code>, <code>BLACK_WHITE_ALPHA</code>, 
@@ -36,22 +41,19 @@ public class Matrix {
 			row=1;
 		}if(col<1){
 			col=1;
-		}if(type<1 || type>4){
-			type=4;
+		}if(type<Matrix.BLACK_WHITE || type>Matrix.RED_GREEN_BLUE_ALPHA){
+			type = Matrix.BLACK_WHITE;
 		}
 		
 		this.pixels = new int[row][col][type];
 	}
 	
-	/**
-	 * Type is- <code>RED_GREEN_BLUE_ALPHA</code>
-	 */
-	public Matrix(String imageFilePath) throws IOException {
-		this(ImageIO.read(new File(imageFilePath)));
+	public Matrix(String imageFilePath, int type) throws IOException {
+		this(ImageIO.read(new File(imageFilePath)), type);
 	}
 	
-	public Matrix(BufferedImage bufferedImage){
-		this.pixels = bufferedImageToMatrix(bufferedImage).pixels;
+	public Matrix(BufferedImage bufferedImage, int type){
+		this.pixels = bufferedImageToMatrix(bufferedImage, type).pixels;
 	}
 	
 	
@@ -62,14 +64,14 @@ public class Matrix {
 	 * @return height of image
 	 */
 	public int getRows(){
-		return pixels.length;
+		return this.pixels.length;
 	}
 	
 	/**
 	 * @return width of image
 	 */
 	public int getCols(){
-		return pixels[0].length;
+		return this.pixels[0].length;
 	}
 	
 	/**
@@ -79,7 +81,7 @@ public class Matrix {
 	 * 4 -> <code>RED_GREEN_BLUE_ALPHA</code>
 	 */
 	public int getType(){
-		return pixels[0][0].length;
+		return this.pixels[0][0].length;
 	}
 	
 	/**
@@ -87,8 +89,8 @@ public class Matrix {
 	 * @param colNo 0 =< colNo < number of columns
 	 */
 	public int[] getPixel(int rowNo, int colNo){
-		if(rowNo>=0 && colNo>=0 && rowNo<pixels.length && colNo<pixels[0].length){
-			return pixels[rowNo][colNo].clone();
+		if(rowNo>=0 && colNo>=0 && rowNo<this.pixels.length && colNo<this.pixels[0].length){
+			return this.pixels[rowNo][colNo].clone();
 		}else{
 			return null;
 		}
@@ -99,9 +101,9 @@ public class Matrix {
 	 * @param colNo 0 =< colNo < number of columns
 	 */
 	public void setPixel(int rowNo, int colNo, int[] value){
-		if(rowNo>=0 && colNo>=0 && rowNo<pixels.length && colNo<pixels[0].length && 
-				value.length==pixels[0][0].length){
-			pixels[rowNo][colNo] = value.clone();
+		if(rowNo>=0 && colNo>=0 && rowNo<this.pixels.length && colNo<this.pixels[0].length && 
+				value.length==this.pixels[0][0].length){
+			this.pixels[rowNo][colNo] = value.clone();
 		}
 	}
 
@@ -109,7 +111,9 @@ public class Matrix {
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
-	 * Type is converted to <code>RED_GREEN_BLUE_ALPHA</code>
+	 * 
+	 * @param mat
+	 * @return
 	 */
 	public static BufferedImage matrixToBufferedImage(Matrix mat){
 		BufferedImage bufferedImage = new BufferedImage(mat.pixels[0].length, mat.pixels.length,
@@ -126,6 +130,7 @@ public class Matrix {
 	
 	public static int rGBToInteger(int[] rGBInt){
 		Color color;
+		//int col = (255 << 24) | (rGBInt[0] << 16) | (rGBInt[0] << 8) | rGBInt[0];
 		
 		if(rGBInt.length==BLACK_WHITE){
 			color = new Color(rGBInt[0], rGBInt[0], rGBInt[0], 255);
@@ -141,35 +146,70 @@ public class Matrix {
 	}
 	
 	/**
-	 * @return <code>RED_GREEN_BLUE_ALPHA<code> type <code>Matrix</code>
+	 * 
+	 * @param bufferedImage
+	 * @param type
+	 * @return
 	 */
-	public static Matrix bufferedImageToMatrix(BufferedImage bufferedImage){
+	public static Matrix bufferedImageToMatrix(BufferedImage bufferedImage, int type){
 		int row = bufferedImage.getHeight();
 		int col = bufferedImage.getWidth();
 		
-		Matrix matrix = new Matrix(row, col, RED_GREEN_BLUE_ALPHA);
+		if(type<Matrix.BLACK_WHITE || type>Matrix.RED_GREEN_BLUE_ALPHA){
+			type = Matrix.BLACK_WHITE;
+		}
+		
+		Matrix matrix = new Matrix(row, col, type);
 		
 		for(int i=0, j; i<row; i++){
 			for(j=0; j<col; j++){
-				matrix.pixels[i][j] = integerToRGB(bufferedImage.getRGB(j, i));
+				matrix.pixels[i][j] = integerToRGB(bufferedImage.getRGB(j, i), matrix.pixels[0][0].length);
 			}
 		}
 		
 		return matrix;
 	}
 	
-	public static int[] integerToRGB(int colorInt){
+	public static int[] integerToRGB(int colorInt, int type){
 		Color color = new Color(colorInt, true);
 		
-		int[] colorRGB = {color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha()};
+		int[] colorRGB = new int[type];
+		
+		if(type==BLACK_WHITE){
+			colorRGB[0] = (int) (color.getRed() * 0.3 +
+					color.getGreen() * 0.59 +
+					color.getBlue() * 0.11);
+		}else if(type==BLACK_WHITE_ALPHA){
+			colorRGB[0] = (int) (color.getRed() * 0.3 +
+					color.getGreen() * 0.59 +
+					color.getBlue() * 0.11);
+			colorRGB[1] = color.getAlpha();
+		}else if(type==RED_GREEN_BLUE){
+			colorRGB[0] = color.getRed();
+			colorRGB[1] = color.getGreen();
+			colorRGB[2] = color.getBlue();
+		}else{
+			colorRGB[0] = color.getRed();
+			colorRGB[1] = color.getGreen();
+			colorRGB[2] = color.getBlue();
+			colorRGB[3] = color.getAlpha();
+		}
 		
 		return colorRGB;
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	
+	/**
+	 * 
+	 * @param rowStart 0 =< rowStart < rowEnd
+	 * @param rowEnd rowStart < rowEnd < numberOfRows
+	 * @param colStart 0 =< colStart < colEnd
+	 * @param colEnd colStart < colEnd < numberOfCols
+	 * @return
+	 */
 	public Matrix subMatrix(int rowStart, int rowEnd, int colStart, int colEnd){
-		if(rowStart>=0 && colStart>=0 && rowEnd<pixels.length && colEnd<pixels[0].length &&
+		if(rowStart>=0 && colStart>=0 && rowEnd<getRows() && colEnd<getCols() &&
 			rowEnd>rowStart && colEnd>colStart){
 			
 			int row = rowEnd-rowStart;
@@ -179,7 +219,7 @@ public class Matrix {
 			
 			for(int i=0; i<row; i++){
 				for(int j=0; j<col; j++){
-					matrix.pixels[i][j] = this.pixels[rowStart+i][colStart+j];
+					matrix.pixels[i][j] = this.pixels[rowStart+i][colStart+j].clone();
 				}
 			}
 			
@@ -191,6 +231,11 @@ public class Matrix {
 	}
 	
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	public Matrix clone(){
+		return subMatrix(0, getRows()-1, 0, getCols()-1);
+	}
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	public void write(String filePath) throws IOException{
 		BufferedImage bufferedImage = matrixToBufferedImage(this);
@@ -199,34 +244,40 @@ public class Matrix {
 	}
 	
 	/**
-	 * @return text string
+	 * @return image as text
 	 */
 	public String dump(){
-		int row = pixels.length;
-		int col = pixels[0].length;
-		int type = pixels[0][0].length;
+		int row = this.pixels.length;
+		int col = this.pixels[0].length;
+		int type = this.pixels[0][0].length;
 		
 		String string = "(" + row + "," + col + "," + type + ")\n";
 		string += "[";
 		
-		String pixelString;
+		String pixelString, rowPixelsString;
 		for(int i=0, j; i<row; i++){
+			
+			rowPixelsString = "";
 			for(j=0; j<col; j++){
 				
 				pixelString = "";
 				for(int k=0; k<type; k++){
-					pixelString += pixels[i][j][k] + ",";
+					pixelString += this.pixels[i][j][k] + ",";
 				}
-				string += pixelString;
+				
+				rowPixelsString += pixelString;
 			}
+			
+			string += rowPixelsString;
 		}
+		
 		string += "]";
 		
 		return string;
 	}
 	
 	/**
-	 * 
+	 * creates image from test (output of dump)
 	 * @param string text string
 	 */
 	public static Matrix load(String string){
@@ -265,19 +316,54 @@ public class Matrix {
 		return matrix;
 	}
 	
+	/**
+	 * @return text image
+	 */
+	public String toString(){
+		int row = this.pixels.length;
+		int col = this.pixels[0].length;
+		int type = this.pixels[0][0].length;
+		
+		String string = "(" + row + "," + col + "," + type + ")\n";
+		string += "[\n";
+		
+		String pixelString, rowPixelsString;
+		for(int i=0, j, k; i<row; i++){
+	
+			rowPixelsString = "[";
+			for(j=0; j<col; j++){
+				
+				pixelString = "("+this.pixels[i][j][0];
+				for(k=1; k<type; k++){
+					pixelString += "." + this.pixels[i][j][k];
+				}
+				
+				rowPixelsString += pixelString + ") ";
+			}
+			
+			string += rowPixelsString+"]\n";
+		}
+		
+		string += "]";
+		
+		return string;
+	}
+	
+	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**TEST_ONLY**/
 	public static void main(String[] args) {
 		try {
-			Matrix matrix = new Matrix("C:\\Users\\admin\\Desktop\\a.jpg");
-			
-			Matrix mat2 = Matrix.load(matrix.dump());
-			//System.out.println(mat2.dump());
+			Matrix matrix = new Matrix("C:\\Users\\admin\\Desktop\\a.jpg", Matrix.RED_GREEN_BLUE);
+			System.out.println(matrix.toString());
+			//System.out.println(matrix.dump());
+			//matrix.write("C:\\Users\\admin\\Desktop\\b.png");
+			//Matrix mat2 = Matrix.load(matrix.dump());
 //			//mat2 = MatrixUtil.rotate(mat2, 30);
 			
-			System.out.println(mat2.pixels[10][10] + ", " + mat2.getPixel(10, 10));
-			mat2.write("C:\\Users\\admin\\Desktop\\1.png");
+			//System.out.println(mat2.pixels[10][10] + ", " + mat2.getPixel(10, 10));
+			//mat2.write("C:\\Users\\admin\\Desktop\\1.png");
 			
 			System.out.println("OPERATION SUCCESSFUL!!");
 		} catch (IOException e) {

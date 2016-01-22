@@ -1,7 +1,7 @@
-/********************************************************************************
- * Developer: Minhas Kamal(BSSE0509)											*
- * Date : 11-04-2014															*
- *******************************************************************************/
+/************************************************************************************************************
+ * Developer: Minhas Kamal(minhaskamal024@gmail.com)														*
+ * Date : 11-04-2014																						*
+ ***********************************************************************************************************/
 
 
 package com.minhaskamal.egami.view;
@@ -126,7 +126,8 @@ public class FileChooser extends JFileChooser{
 		return chooseFileFromComputer().getAbsolutePath();
 	}
 	
-	//**  Main Method  **//
+	
+	//**  Main Method  **//test only
 	public static void main(String args[]){
 		/* Set the NIMBUS look and feel */
     	try {

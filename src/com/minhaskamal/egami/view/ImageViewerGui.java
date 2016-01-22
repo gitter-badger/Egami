@@ -1,5 +1,5 @@
 /****************************************************************************************************************
-* Developer: Minhas Kamal(BSSE-0509, IIT, DU)																	*
+* Developer: Minhas Kamal(minhaskamal024@gmail.com)																*
 * Date: 28-Aug-2015																								*
 ****************************************************************************************************************/
 
@@ -93,6 +93,7 @@ public class ImageViewerGui extends JLabel {
 		// End of Adding Components 															#_______A_______#
 	}
 
+	///test only
 	/********* Main Method *********/
 	public static void main(String args[]) {
 		/*// Set the NIMBUS look and feel //*/
