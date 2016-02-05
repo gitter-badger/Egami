@@ -11,7 +11,6 @@ import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
 
 public class Matrix {
@@ -21,9 +20,12 @@ public class Matrix {
 			RED_GREEN_BLUE_ALPHA = 4;
 	
 	/**
-	 * image container
+	 * first dimension represents row or height from top to bottom ranging from 0 to height-1,
+	 * second dimension represents column or width from left to right ranging from 0 to width-1,
+	 * third dimension represents grey-scale or RGB, & alpha depending on image type. 
+	 * <br/><b>CAUTION: GENERALLY SHOULD NOT BE ACCESSED DIRECTLY!</b>
 	 */
-	int[][][] pixels;
+	public int[][][] pixels;
 	
 	
 	//////////////////////////////////////////////////////////////////////////////////////////////////////

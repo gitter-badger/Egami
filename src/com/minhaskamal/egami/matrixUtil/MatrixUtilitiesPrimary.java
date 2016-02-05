@@ -4,7 +4,9 @@
 * Modification Date: 01-Jan-2016																				*
 ****************************************************************************************************************/
 
-package com.minhaskamal.egami.matrix;
+package com.minhaskamal.egami.matrixUtil;
+
+import com.minhaskamal.egami.matrix.Matrix;
 
 public class MatrixUtilitiesPrimary {
 	///converter//////////////////////////////////////////////////////////////////////////////////////////////////
@@ -328,45 +330,65 @@ public class MatrixUtilitiesPrimary {
 	
 	///bordering//////////////////////////////////////////////////////////////////////////////////////////////////
 
+	public static Matrix border(Matrix matrix, int breadth){
+		int[] borderPixel = new int[matrix.getType()];
+		
+		return border(matrix, breadth, breadth, borderPixel);
+	}
+	
 	/**
 	 * 
 	 * @param matrix
 	 * @param breadth
-	 * @param pixel
+	 * @param borderPixel
 	 * @return
 	 */
-	public static Matrix border(Matrix matrix, int breadth, int pixel[]){
-		if(breadth<0 || pixel.length!=matrix.getType()){
+	public static Matrix border(Matrix matrix, int horizontalBreadth, int verticalBreadth, int borderPixel[]){
+		if(horizontalBreadth<0 || verticalBreadth<0 || borderPixel.length!=matrix.getType()){
 			return null;
 		}
 		
 		int rows = matrix.getRows(),
 			cols = matrix.getCols();
 			
-		int newRows = rows+(breadth*2),
-			newCols = cols+(breadth*2);
+		int newRows = rows+(verticalBreadth*2),
+			newCols = cols+(horizontalBreadth*2);
 		
 		Matrix matrix2 = new Matrix(newRows, newCols, matrix.getType());
 		
 		for(int i=0; i<newRows; i++){
 			for(int j=0; j<newCols; j++){
-				matrix2.pixels[i][j] = pixel;
+				matrix2.pixels[i][j] = borderPixel;//###
 			}
 		}
 		
 		for(int i=0; i<rows; i++){
 			for(int j=0; j<cols; j++){
-				matrix2.pixels[i+breadth][j+breadth] = matrix.pixels[i][j];
+				matrix2.pixels[i+verticalBreadth][j+horizontalBreadth] = matrix.pixels[i][j];
 			}
 		}
 		
 		return matrix2;
 	}
 	
+	///frequency counting/////////////////////////////////////////////////////////////////////////////////////////
+	public static int[][] countPixelFreq(Matrix matrix){
+		int[][] pixelFreq = new int[matrix.getType()][256];
+		for(int i=0; i<matrix.getRows(); i++) {
+			for(int j=0; j<matrix.getCols(); j++) {
+				for(int k=0; k<matrix.getType(); k++){
+					pixelFreq[k][matrix.pixels[i][j][k]]++;
+				}
+			}
+		}
+		
+		return pixelFreq;
+	}
 	
-	///test only
+	
+	///test only//////////////////////////////////////////////////////////////////////////////////////////////////
 	public static void main(String[] args) throws Exception {
-		Matrix matrix = new Matrix("C:\\Users\\admin\\Desktop\\c.png", Matrix.RED_GREEN_BLUE_ALPHA);
+		Matrix matrix = new Matrix("C:\\Users\\admin\\Desktop\\real.png", Matrix.RED_GREEN_BLUE_ALPHA);
 		
 		//matrix = rotate(matrix, 20);
 		
@@ -379,8 +401,14 @@ public class MatrixUtilitiesPrimary {
 //		matrix = crop(matrix, 5, 2, 10, 15);
 //		matrix = rotateLeft(matrix);
 //		matrix = rotateRight(matrix);
-		
-		matrix.write("C:\\Users\\admin\\Desktop\\d.png");
+		int[][] freq= countPixelFreq(matrix);
+		for(int i=0; i<freq.length; i++){
+			for(int j=0; j<freq[0].length; j++){
+				System.out.print(freq[i][j]+", ");
+			}
+			System.out.println();
+		}
+		//matrix.write("C:\\Users\\admin\\Desktop\\d.png");
 		
 		System.out.println("OPERATION SUCCESSFUL!!");
 	}

@@ -5,8 +5,9 @@
 ****************************************************************************************************************/
 
 
-package com.minhaskamal.egami.matrix;
+package com.minhaskamal.egami.matrixUtil;
 
+import com.minhaskamal.egami.matrix.Matrix;
 import com.minhaskamal.egami.matrixMath.MatrixMath;
 
 public class MatrixUtilitiesSecondary extends MatrixUtilitiesPrimary{
@@ -129,19 +130,20 @@ public class MatrixUtilitiesSecondary extends MatrixUtilitiesPrimary{
 	
 	/**
 	 * 
-	 * @param matrix
-	 * @param mask
+	 * @param matrix 
+	 * @param mask has to be square MATRIX
 	 * @return
 	 */
-	public static Matrix masking(Matrix matrix, double[][] mask) {
+	public static Matrix applyMask(Matrix matrix, double[][] mask) {
+		Matrix matrix2 = new Matrix(matrix.getRows(), matrix.getCols(), matrix.getType());
+		
+		int border = (mask.length-1)/2;
+		matrix = MatrixUtilitiesPrimary.border(matrix, border);
+		
 		int rows = matrix.getRows(),
 			cols = matrix.getCols();
-		
-		
-		Matrix matrix2 = new Matrix(rows, cols, matrix.getType());
 		int[] newpixel = new int[matrix.getType()];
 
-		int border = (mask.length-1)/2;
 		for(int i=border; i<rows-border; i++) {
 			for(int j=border; j<cols-border; j++) {
 
@@ -159,7 +161,7 @@ public class MatrixUtilitiesSecondary extends MatrixUtilitiesPrimary{
 						newpixel[k]=0;
 					}
 				}
-				matrix2.pixels[i][j] =  newpixel.clone();
+				matrix2.pixels[i-border][j-border] =  newpixel.clone();
 				
 			}
 		}

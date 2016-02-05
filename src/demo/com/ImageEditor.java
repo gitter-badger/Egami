@@ -1,8 +1,16 @@
+/****************************************************************************************************************
+* Developer: Minhas Kamal(minhaskamal024@gmail.com)																*
+* Date: 01-Feb-2016																								*
+****************************************************************************************************************/
+
 package demo.com;
 
 import java.io.IOException;
 
+import javax.swing.UIManager;
+
 import com.minhaskamal.egami.matrix.*;
+import com.minhaskamal.egami.matrixUtil.*;
 import com.minhaskamal.egami.view.ImageViewer;
 
 public class ImageEditor {
@@ -19,13 +27,13 @@ public class ImageEditor {
 //		matrix = newMatrix.clone();
 		
 		///create border
-		matrix = MatrixUtilitiesPrimary.border(matrix, 4, matrix.getPixel(0, 0));
+//		matrix = MatrixUtilitiesPrimary.border(matrix, 4);
 		
 		///skew border
 //		matrix = MatrixUtilitiesPrimary.skewVertical(matrix, 30);
 				
 		///rotate
-		matrix = MatrixUtilitiesSecondary.rotate(matrix, 20);
+		//matrix = MatrixUtilitiesSecondary.rotate(matrix, 20);
 			
 		///rotate method 2
 //		matrix = MatrixUtilitiesSecondary.rotate2(matrix, 15);
@@ -34,20 +42,23 @@ public class ImageEditor {
 //		matrix = MatrixUtilitiesSecondary.resize(matrix, 200);
 				
 		///masking
-//		double[][] mask = {
-//				{-1, 0, 1},
-//				{-1, 0, 1},
-//				{-1, 0, 1}
-//		};
+		double[][] mask = {
+				{-1, 0, 1},
+				{-1, 0, 1},
+				{-1, 0, 1}
+		};
 //		double[][] mask = {
 //				{4.0/33, 4.0/33, 4.0/33},
-//				{4.0/33, 1.0/18, 4.0/33},
+//				{4.0/33, 1.0/33, 4.0/33},
 //				{4.0/33, 4.0/33, 4.0/33}
 //		};
-//		matrix = MatrixUtilitiesSecondary.masking(matrix, mask);
+		matrix = MatrixUtilitiesSecondary.applyMask(matrix, mask);
 		
 		
-		///show in image viewer
+		///show result in image viewer
+		try {
+			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+		} catch(Exception e){/*do nothing*/}
 		ImageViewer.viewImage(Matrix.matrixToBufferedImage(matrix));
 	}
 }

@@ -9,7 +9,7 @@ package com.minhaskamal.egami.processes;
 import java.io.IOException;
 
 import com.minhaskamal.egami.matrix.Matrix;
-import com.minhaskamal.egami.matrix.MatrixUtilitiesPrimary;
+import com.minhaskamal.egami.matrixUtil.MatrixUtilitiesPrimary;
 
 public class RGBHistogram {
 	private final int colorValues = 256;

@@ -7,12 +7,7 @@ package com.minhaskamal.egami.view;
 
 import java.awt.Font;
 import java.awt.GridLayout;
-
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JScrollPane;
-import javax.swing.UIManager;
+import javax.swing.*;
 
 
 /**
@@ -93,24 +88,24 @@ public class ImageViewerGui extends JLabel {
 		// End of Adding Components 															#_______A_______#
 	}
 
-	///test only
-	/********* Main Method *********/
-	public static void main(String args[]) {
-		/*// Set the NIMBUS look and feel //*/
-		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (Exception ex) {
-			// do nothing if operation is unsuccessful
-		}
-
-		/* Create and display the form */
-		/* Create and display the form */
-		ImageViewerGui gui = new ImageViewerGui();
-		
-		JFrame jFrame = new JFrame();
-		jFrame.setBounds(10, 10, 950, 700);
-		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		jFrame.setVisible(true);
-		jFrame.add(gui);
-	}
+//	///test only
+//	/********* Main Method *********/
+//	public static void main(String args[]) {
+//		/*// Set the NIMBUS look and feel //*/
+//		try {
+//			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+//		} catch (Exception ex) {
+//			// do nothing if operation is unsuccessful
+//		}
+//
+//		/* Create and display the form */
+//		/* Create and display the form */
+//		ImageViewerGui gui = new ImageViewerGui();
+//		
+//		JFrame jFrame = new JFrame();
+//		jFrame.setBounds(10, 10, 950, 700);
+//		jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		jFrame.setVisible(true);
+//		jFrame.add(gui);
+//	}
 }

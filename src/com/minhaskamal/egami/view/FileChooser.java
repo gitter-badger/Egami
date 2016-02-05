@@ -8,7 +8,6 @@ package com.minhaskamal.egami.view;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-
 import java.awt.Dimension;
 import java.io.File;
 
@@ -127,17 +126,17 @@ public class FileChooser extends JFileChooser{
 	}
 	
 	
-	//**  Main Method  **//test only
-	public static void main(String args[]){
-		/* Set the NIMBUS look and feel */
-    	try {
-			javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");					
-		} catch (Exception ex) {
-			//do nothing if operation is unsuccessful
-		}
-			
-		File file[] = new FileChooser(new String[]{"tai"}).chooseDirectoriesFromComputer();
-		System.out.println(file[0].toString());
-		System.out.println(file[1].toString());
-	}
+//	//**  Main Method  **//test only
+//	public static void main(String args[]){
+//		/* Set the NIMBUS look and feel */
+//    	try {
+//			javax.swing.UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");					
+//		} catch (Exception ex) {
+//			//do nothing if operation is unsuccessful
+//		}
+//			
+//		File file[] = new FileChooser(new String[]{"tai"}).chooseDirectoriesFromComputer();
+//		System.out.println(file[0].toString());
+//		System.out.println(file[1].toString());
+//	}
 }

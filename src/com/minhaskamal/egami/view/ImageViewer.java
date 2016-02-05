@@ -5,22 +5,14 @@
 
 package com.minhaskamal.egami.view;
 
-import java.awt.Frame;
-import java.awt.GridLayout;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.UIManager;
+import javax.swing.*;
 
 /**
  * @author Minhas Kamal
@@ -219,18 +211,18 @@ public class ImageViewer{
 	
 	// End of Overridden Methods 																#_______OM_______#
 	
-	///test only
-	/********* Main Method *********/
-	public static void main(String args[]) {
-		/*// Set the NIMBUS look and feel //*/
-		try {
-			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
-		} catch (Exception ex) {
-			// do nothing if operation is unsuccessful
-		}
-
-//		ImageViewer.create();
-		ImageViewer.viewImage("src/demo/res/imgs/real.png");
-	}
+//	///test only
+//	/********* Main Method *********/
+//	public static void main(String args[]) {
+//		/*// Set the NIMBUS look and feel //*/
+//		try {
+//			UIManager.setLookAndFeel("javax.swing.plaf.nimbus.NimbusLookAndFeel");
+//		} catch (Exception ex) {
+//			// do nothing if operation is unsuccessful
+//		}
+//
+////		ImageViewer.create();
+//		ImageViewer.viewImage("src/demo/res/imgs/real.png");
+//	}
 }
 
